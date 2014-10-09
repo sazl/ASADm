@@ -90,14 +90,6 @@ $(document).ready(function() {
     var S = numeric.mul(X.slice(0, -1), D);
     var EQW = numeric.sum(S.map(Math.abs));
     eqwInput.val(EQW);
-
-    console.log(result);
-    console.log(wl_range);
-    console.log(flux_range);
-    console.log(spline_flux);
-    console.log(X);
-    console.log(D);
-    console.log(S);
   }
 
   function tableAppendPoint(x, y) {
@@ -109,10 +101,23 @@ $(document).ready(function() {
     tableBody.append(tr);
   }
 
+  function splinePoints(xs, ys) {
+    var sp = numeric.spline(xs, ys);
+    var xs_start = xs[0];
+    var xs_end = xs[xs.length - 1];
+    var xs_diff = xs_end - xs_start;
+    var sp_xs = numeric.linspace(xs_start, xs_end, xs_diff*5 + 1, 'periodic');
+    var sp_ys = sp.at(sp_xs);
+    return [sp_xs, sp_ys];
+  }
+
   function plotData(xs, ys) {
     var values = [];
-    for (var i = 0; i < xs.length; i++) {
-      values.push({x: xs[i], y: ys[i]});
+    var sp = splinePoints(xs, ys);
+    var sp_xs = sp[0];
+    var sp_ys = sp[1];
+    for (var i = 0; i < sp_xs.length; i++) {
+      values.push({x: sp_xs[i], y: sp_ys[i]});
     }
     var datum = [{values: values, key: 'Flux', color: '#ff7f0e'}];
 
@@ -120,17 +125,14 @@ $(document).ready(function() {
       var width = nv.utils.windowSize().width - 40;
       var height = nv.utils.windowSize().height - 40;
 
-      var chart = nv.models.lineChart()
+      var chart = nv.models.lineWithFocusChart()
             .height(height)
-            .useInteractiveGuideline(true)
             .transitionDuration(250)
-            .showLegend(true)
-            .showYAxis(true)
-            .showXAxis(true);
+            .showLegend(true);
 
       chart.xAxis
         .axisLabel('Wavelength (Angstroms)')
-        .tickFormat(d3.format(',r'));
+        .tickFormat(d3.format('.02f'));
 
       chart.yAxis
         .axisLabel('Flux')
@@ -142,8 +144,8 @@ $(document).ready(function() {
         .call(chart);
 
       nv.utils.windowResize(chart.update);
-      d3.selectAll(".nv-point").on("click", function (e) {
-        tableAppendPoint(e.x, e.y);
+      chart.lines.dispatch.on('elementClick', function(e) {
+        tableAppendPoint(e.point.x, e.point.y);
       });
 
       return chart;
@@ -166,8 +168,8 @@ $(document).ready(function() {
       progress.style.width = '100%';
       progress.textContent = '100%';
       var matrix = parseMatrix(reader.result);
-      wavelength = matrix[0];
-      flux = matrix[1];
+      wavelength = matrix[0].slice(0, -1);
+      flux = matrix[1].slice(0, -1);
       plotData(wavelength, flux);
     };
 

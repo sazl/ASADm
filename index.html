@@ -15,7 +15,8 @@
 
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed"
-                  data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  data-toggle="collapse"
+                  data-target="#bs-example-navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -49,7 +50,8 @@
                 <div class="panel-body" style="height: 100px">
                   <input type="file" id="files" name="file" /> <br/>
                   <div class="progress">
-                    <div class="progress-bar progress-bar-success progress-bar-striped"
+                    <div class="progress-bar progress-bar-success
+                         progress-bar-striped"
                          role="progressbar"
                          aria-valuenow="0"
                          aria-valuemin="0"
@@ -61,6 +63,51 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  Options
+                </div>
+                <div class="panel-body">
+                  <form role="form">
+                    <div class="form-group">
+                      <label for="wavelengthRangeStart">Wavelength Start</label>
+                      <input type="text"
+                             class="form-control"
+                             id="wavelengthStartInput" />
+                    </div>
+                    <div class="form-group">
+                      <label for="wavelengthRangeEnd">Wavelength End</label>
+                      <input type="text"
+                             class="form-control"
+                             id="wavelengthEndInput" />
+                    </div>
+                    <div class="form-group">
+                      <label for="pointsSelected">Points Selected</label>
+                      <table id="pointsSelected"
+                             class="table table-bordered
+                             table-striped table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Wavelength</th>
+                            <th>Flux</th>
+                          </tr>
+                        </thead>
+                        <tbody id="selectedPointsBody">
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
             <div class="col-md-12">
               <div class="panel panel-default">
                 <div class="panel-heading">
@@ -69,12 +116,14 @@
                 <div class="panel-body" style="height: 100px">
                   <div class="btn-toolbar" role="toolbar">
                     <div class="btn-group btn-group-sm">
-                      <button id="clearButton" type="button" class="btn btn-danger">
+                      <button id="clearButton" type="button"
+                              class="btn btn-danger">
                         <span class="glyphicon glyphicon-trash"> Clear</span>
                       </button>
                     </div>
                     <div class="btn-group btn-group-sm">
-                      <button id="calculateEQWButton" type="button" class="btn btn-success">
+                      <button id="calculateEQWButton" type="button"
+                              class="btn btn-success">
                         <span class="glyphicon glyphicon-ok"> Calculate EQW</span>
                       </button>
                     </div>
@@ -102,35 +151,18 @@
         <div class="col-md-3">
           <div class="row">
             <div class="col-md-12">
-              <div class="panel panel-default">
+              <div class="panel panel-primary">
                 <div class="panel-heading">
-                  Options
+                  Equivalent Width
                 </div>
                 <div class="panel-body">
-                  <form role="form">
-                    <div class="form-group">
-                      <label for="wavelengthRangeStart">Wavelength Start</label>
-                      <input type="text" class="form-control" id="wavelengthStartInput" />
-                    </div>
-                    <div class="form-group">
-                      <label for="wavelengthRangeEnd">Wavelength End</label>
-                      <input type="text" class="form-control" id="wavelengthEndInput" />
-                    </div>
-                    <div class="form-group">
-                      <label for="pointsSelected">Points Selected</label>
-                      <table id="pointsSelected" class="table table-bordered table-striped table-condensed">
-                        <thead>
-                          <tr>
-                            <th>Wavelength</th>
-                            <th>Flux</th>
-                          </tr>
-                        </thead>
-                        <tbody id="selectedPointsBody">
-
-                        </tbody>
-                      </table>
-                    </div>
-                  </form>
+                  <div class="input-group input-group-md">
+                    <span class="input-group-addon">
+                      <b>Equivalent Width</b>
+                    </span>
+                    <input id="eqw" type="text" class="form-control"
+                           placeholder="EQW" disabled />
+                  </div>
                 </div>
               </div>
             </div>
@@ -138,14 +170,17 @@
 
           <div class="row">
             <div class="col-md-12">
-              <div class="panel panel-primary">
+              <div class="panel panel-warning">
                 <div class="panel-heading">
                   Equivalent Width
                 </div>
                 <div class="panel-body">
                   <div class="input-group input-group-md">
-                    <span class="input-group-addon">Equivalent Width</span>
-                    <input id="eqw" type="text" class="form-control" placeholder="EQW" disabled />
+                    <span class="input-group-addon">
+                      <b>Equivalent Width</b>
+                    </span>
+                    <input id="eqw" type="text" class="form-control"
+                           placeholder="EQW" disabled />
                   </div>
                 </div>
               </div>
