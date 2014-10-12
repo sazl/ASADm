@@ -40,7 +40,8 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="col-md-3">          
+        <div class="col-md-3">
+          
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-default">
@@ -60,48 +61,6 @@
                       0%
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  Options
-                </div>
-                <div class="panel-body">
-                  <form role="form">
-                    <div class="form-group">
-                      <label for="wavelengthRangeStart">Wavelength Start</label>
-                      <input type="text"
-                             class="form-control"
-                             id="wavelengthStartInput" />
-                    </div>
-                    <div class="form-group">
-                      <label for="wavelengthRangeEnd">Wavelength End</label>
-                      <input type="text"
-                             class="form-control"
-                             id="wavelengthEndInput" />
-                    </div>
-                    <div class="form-group">
-                      <label for="pointsSelected">Points Selected</label>
-                      <table id="pointsSelected"
-                             class="table table-bordered
-                             table-striped table-condensed">
-                        <thead>
-                          <tr>
-                            <th>Wavelength</th>
-                            <th>Flux</th>
-                          </tr>
-                        </thead>
-                        <tbody id="selectedPointsBody">
-
-                        </tbody>
-                      </table>
-                    </div>
-                  </form>
                 </div>
               </div>
             </div>
@@ -132,6 +91,68 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  Points Selected
+                </div>
+                <div class="panel-body">
+                  <form role="form">
+                    <div class="form-group">
+                      <label for="pointsKCaII">KCaII</label>
+                      <table id="pointsKCaII"
+                             class="table table-bordered
+                             table-striped table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Wavelength</th>
+                            <th>Flux</th>
+                          </tr>
+                        </thead>
+                        <tbody id="selectedPointsKCaII">
+
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <label for="pointsGBand">G Band</label>
+                      <table id="pointsGBand"
+                             class="table table-bordered
+                             table-striped table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Wavelength</th>
+                            <th>Flux</th>
+                          </tr>
+                        </thead>
+                        <tbody id="selectedPointsGBand">
+
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <label for="pointsMgI">MgI</label>
+                      <table id="pointsMgI"
+                             class="table table-bordered
+                             table-striped table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Wavelength</th>
+                            <th>Flux</th>
+                          </tr>
+                        </thead>
+                        <tbody id="selectedPointsMgI">
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="col-md-6">
@@ -153,16 +174,38 @@
             <div class="col-md-12">
               <div class="panel panel-primary">
                 <div class="panel-heading">
-                  Equivalent Width
+                  Equivalent Widths
                 </div>
                 <div class="panel-body">
-                  <div class="input-group input-group-md">
-                    <span class="input-group-addon">
-                      <b>Equivalent Width</b>
-                    </span>
-                    <input id="eqw" type="text" class="form-control"
-                           placeholder="EQW" disabled />
-                  </div>
+                  <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                      <label  class="col-sm-3 control-label"
+                              for="eqw-KCaII">KCaII</label>
+                      <div class="col-sm-9">
+                        <input id="eqw-KCaII" type="text"
+                               class="form-control"
+                               placeholder="KCaII EQW" disabled />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label  class="col-sm-3 control-label"
+                              for="eqw-GBand">G Band</label>
+                      <div class="col-sm-9">
+                        <input id="eqw-GBand" type="text"
+                               class="form-control"
+                               placeholder="G Band EQW" disabled />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label  class="col-sm-3 control-label"
+                              for="eqw-MgI">MgI</label>
+                      <div class="col-sm-9">
+                        <input id="eqw-MgI" type="text"
+                               class="form-control"
+                               placeholder="MgI EQW" disabled />
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -175,13 +218,26 @@
                   Equivalent Width
                 </div>
                 <div class="panel-body">
-                  <div class="input-group input-group-md">
-                    <span class="input-group-addon">
-                      <b>Equivalent Width</b>
-                    </span>
-                    <input id="eqw" type="text" class="form-control"
-                           placeholder="EQW" disabled />
-                  </div>
+                  <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                      <label  class="col-sm-3 control-label"
+                              for="pointsSelected">log t(Gyr)</label>
+                      <div class="col-sm-9">
+                        <input id="eqw" type="text"
+                               class="form-control"
+                               placeholder="EQW" disabled />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label  class="col-sm-3 control-label"
+                              for="pointsSelected">[Fe/H]</label>
+                      <div class="col-sm-9">
+                        <input id="eqw" type="text"
+                               class="form-control"
+                               placeholder="EQW" disabled />
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>

@@ -2,13 +2,29 @@
 $(document).ready(function() {
   var reader;
   var progress = document.querySelector('.progress-bar');
-  var tableBody = $('#selectedPointsBody');
-  var eqwInput = $('#eqw');
-  var wavelengthStartInput = $('#wavelengthStartInput');
-  var wavelengthEndInput = $('#wavelengthEndInput');
+  
+  var tableBodyKCaII = $('#selectedPointsKCaII');
+  var tableBodyGBand = $('#selectedPointsGBand');
+  var tableBodyMgI = $('#selectPointsMgI');
 
-  var selectedPointsX = [];
-  var selectedPointsY = [];
+  var eqwInputKCaII = $('#eqw-KCaII');
+  var eqwInputGBand = $('#eqw-GBand');
+  var eqwInputMgI = $('#eqw-MgI');
+  
+  var wavelengthStartKCaII = 3908;
+  var wavelengthEndKCaII = 3952;
+  var wavelengthStartGBand = 4284;
+  var wavelengthEndGBand = 4318;
+  var wavelengthStartMgI = 5156;
+  var wavelengthEndMgI = 5196;
+
+  var pointsXKCaII = [];
+  var pointsYKCaII = [];
+  var pointsXGBand = [];
+  var pointsYGBand = [];
+  var pointsXMgI = [];
+  var pointsYMgI = [];
+  
   var wavelength, flux;
 
   function abortRead() {
@@ -24,7 +40,7 @@ $(document).ready(function() {
       alert('File is not readable');
       break;
     case evt.target.error.ABORT_ERR:
-      break; // noop
+      break;
     default:
       alert('An error occurred reading this file.');
     };
@@ -49,9 +65,18 @@ $(document).ready(function() {
   }
 
   function clear() {
-    tableBody.empty();
-    selectedPointsX = [];
-    selectedPointsY = [];
+    tableBodyKCaII.empty();
+    tableBodyGBand.empty();
+    tableBodyMgI.empty();
+    eqwInputKCaII.val('');
+    eqwInputGBand.val('');
+    eqwInputMgI.val('');
+    pointsXKCaII = [];
+    pointsYKCaII = [];
+    pointsXGBand = [];
+    pointsYGBand = [];
+    pointsXMgI = [];
+    pointsYMgI = [];
   }
 
   function wavelengthRange(wavelength, flux, start, end) {
@@ -102,11 +127,13 @@ $(document).ready(function() {
   }
 
   function splinePoints(xs, ys) {
+    var factor = 2;
     var sp = numeric.spline(xs, ys);
     var xs_start = xs[0];
     var xs_end = xs[xs.length - 1];
     var xs_diff = xs_end - xs_start;
-    var sp_xs = numeric.linspace(xs_start, xs_end, xs_diff*5 + 1, 'periodic');
+    var sp_xs = numeric.linspace(xs_start, xs_end, xs_diff*factor + 1,
+                                 'periodic');
     var sp_ys = sp.at(sp_xs);
     return [sp_xs, sp_ys];
   }
