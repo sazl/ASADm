@@ -5,11 +5,15 @@ $(document).ready(function() {
   
   var tableBodyKCaII = $('#selectedPointsKCaII');
   var tableBodyGBand = $('#selectedPointsGBand');
-  var tableBodyMgI = $('#selectPointsMgI');
+  var tableBodyMgI = $('#selectedPointsMgI');
 
   var eqwInputKCaII = $('#eqw-KCaII');
   var eqwInputGBand = $('#eqw-GBand');
   var eqwInputMgI = $('#eqw-MgI');
+  var eqwInputSum = $('#eqw-sum');
+
+  var equationInputGyr = $('#equation-Gyr');
+  var equationInputFeH = $('#equation-FeH');
   
   var wavelengthStartKCaII = 3908;
   var wavelengthEndKCaII = 3952;
@@ -24,6 +28,14 @@ $(document).ready(function() {
   var pointsYGBand = [];
   var pointsXMgI = [];
   var pointsYMgI = [];
+
+  var eqwKCaII;
+  var eqwGBand;
+  var eqwMgI;
+  var eqwSum;
+
+  var equationGyr;
+  var equationFeH;
   
   var wavelength, flux;
 
@@ -71,6 +83,9 @@ $(document).ready(function() {
     eqwInputKCaII.val('');
     eqwInputGBand.val('');
     eqwInputMgI.val('');
+    eqwInputSum.val('');
+    equationInputGyr.val('');
+    equationInputFeH.val('');
     pointsXKCaII = [];
     pointsYKCaII = [];
     pointsXGBand = [];
@@ -98,9 +113,7 @@ $(document).ready(function() {
     return result;
   }
 
-  function calculateEQW() {
-    var wavelengthStart = parseFloat(wavelengthStartInput.val());
-    var wavelengthEnd = parseFloat(wavelengthEndInput.val());
+  function calculateEQWBand(wavelength, flux, wavelengthStart, wavelengthEnd, selectedPointsX, selectedPointsY) {
     var result = wavelengthRange(
       wavelength, flux, wavelengthStart, wavelengthEnd);
     var wl_range = result[0];
@@ -114,10 +127,60 @@ $(document).ready(function() {
     var D = diff(wl_range);
     var S = numeric.mul(X.slice(0, -1), D);
     var EQW = numeric.sum(S.map(Math.abs));
-    eqwInput.val(EQW);
+    return EQW;
+  }
+
+  function calculateEQW() {
+    eqwKCaII = calculateEQWBand(wavelength, flux,
+      wavelengthStartKCaII, wavelengthEndKCaII, pointsXKCaII, pointsYKCaII);
+
+    console.log(eqwKCaII);
+
+    eqwGBand = calculateEQWBand(wavelength, flux,
+      wavelengthStartGBand, wavelengthEndGBand, pointsXGBand, pointsYGBand);
+
+    console.log(eqwGBand);
+
+    eqwMgI = calculateEQWBand(wavelength, flux,
+      wavelengthStartMgI, wavelengthEndMgI, pointsXMgI, pointsYMgI);
+
+    console.log(eqwMgI);
+
+    eqwSum = eqwKCaII + eqwGBand + eqwMgI;
+  }
+
+  function outputEQW() {
+    eqwInputKCaII.val(eqwKCaII);
+    eqwInputGBand.val(eqwGBand);
+    eqwInputMgI.val(eqwMgI);
+    eqwInputSum.val(eqwSum);
   }
 
   function tableAppendPoint(x, y) {
+    var selectedPointsX;
+    var selectedPointsY;
+    var tableBody;
+
+    if (x >= wavelengthStartKCaII && x <= wavelengthEndKCaII) {
+      selectedPointsX = pointsXKCaII;
+      selectedPointsY = pointsYKCaII;
+      tableBody = tableBodyKCaII;
+    }
+    else if (x >= wavelengthStartGBand && x <= wavelengthEndGBand) {
+      selectedPointsX = pointsXGBand;
+      selectedPointsY = pointsYGBand;
+      tableBody = tableBodyGBand;
+    }
+    else if (x >= wavelengthStartMgI && x <= wavelengthEndMgI) {
+      selectedPointsX = pointsXMgI;
+      selectedPointsY = pointsYMgI;
+      tableBody = tableBodyMgI;
+    }
+    else {
+      alert("Please select points within the range of the bands");
+      return;
+    }
+
     selectedPointsX.push(x);
     selectedPointsY.push(y);
     var tr = $('<tr>');
@@ -204,6 +267,26 @@ $(document).ready(function() {
     reader.readAsText(file);
   }
 
+  function calculateEquation(a, b, c, eqwm) {
+    return a + b*eqwm + c*eqwm*eqwm;
+  }
+
+  function calculateEquations() {
+    equationGyr = calculateEquation(-2.18, 0.188, -0.003, eqwSum);
+    equationFeH = calculateEquation(-2.9, 0.14, -0.0023, eqwSum);
+  }
+
+  function outputEquations() {
+    equationInputGyr.val(equationGyr);
+    equationInputFeH.val(equationFeH);
+  }
+
+  function calculateAll() {
+    calculateEQW();
+    outputEQW();
+    calculateEquations();
+    outputEquations();
+  }
 
   $('#files').change(function(event) {
     handleFileSelect(event);
@@ -212,6 +295,6 @@ $(document).ready(function() {
     clear();
   });
   $('#calculateEQWButton').click(function(event) {
-    calculateEQW();
+    calculateAll();
   });
 });
