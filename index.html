@@ -72,7 +72,7 @@
                 <div class="panel-heading">
                   Actions
                 </div>
-                <div class="panel-body" style="height: 100px">
+                <div class="panel-body" style="height: 60px">
                   <div class="btn-toolbar" role="toolbar">
                     <div class="btn-group btn-group-sm">
                       <button id="clearButton" type="button"
@@ -101,7 +101,7 @@
                 <div class="panel-body">
                   <form role="form">
                     <div class="form-group">
-                      <label for="pointsKCaII">KCaII</label>
+                      <label for="pointsKCaII">KCaII [3908 - 3952]</label>
                       <table id="pointsKCaII"
                              class="table table-bordered
                              table-striped table-condensed">
@@ -117,7 +117,7 @@
                       </table>
                     </div>
                     <div class="form-group">
-                      <label for="pointsGBand">G Band</label>
+                      <label for="pointsGBand">G Band [4284 - 4318]</label>
                       <table id="pointsGBand"
                              class="table table-bordered
                              table-striped table-condensed">
@@ -133,7 +133,7 @@
                       </table>
                     </div>
                     <div class="form-group">
-                      <label for="pointsMgI">MgI</label>
+                      <label for="pointsMgI">MgI [5156 - 5196]</label>
                       <table id="pointsMgI"
                              class="table table-bordered
                              table-striped table-condensed">
@@ -205,6 +205,15 @@
                                placeholder="MgI EQW" disabled />
                       </div>
                     </div>
+                    <div class="form-group">
+                      <label  class="col-sm-3 control-label"
+                              for="eqw-sum">Σ EWm</label>
+                      <div class="col-sm-9">
+                        <input id="eqw-sum" type="text"
+                               class="form-control"
+                               placeholder="EQW Sum" disabled />
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -221,18 +230,18 @@
                   <form role="form" class="form-horizontal">
                     <div class="form-group">
                       <label  class="col-sm-3 control-label"
-                              for="pointsSelected">log t(Gyr)</label>
+                              for="equation-Gyr">log t(Gyr)</label>
                       <div class="col-sm-9">
-                        <input id="eqw" type="text"
+                        <input id="equation-Gyr" type="text"
                                class="form-control"
                                placeholder="EQW" disabled />
                       </div>
                     </div>
                     <div class="form-group">
                       <label  class="col-sm-3 control-label"
-                              for="pointsSelected">[Fe/H]</label>
+                              for="equation-FeH">[Fe/H]</label>
                       <div class="col-sm-9">
-                        <input id="eqw" type="text"
+                        <input id="equation-FeH" type="text"
                                class="form-control"
                                placeholder="EQW" disabled />
                       </div>
