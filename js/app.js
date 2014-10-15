@@ -2,13 +2,41 @@
 $(document).ready(function() {
   var reader;
   var progress = document.querySelector('.progress-bar');
-  var tableBody = $('#selectedPointsBody');
-  var eqwInput = $('#eqw');
-  var wavelengthStartInput = $('#wavelengthStartInput');
-  var wavelengthEndInput = $('#wavelengthEndInput');
+  
+  var tableBodyKCaII = $('#selectedPointsKCaII');
+  var tableBodyGBand = $('#selectedPointsGBand');
+  var tableBodyMgI = $('#selectedPointsMgI');
 
-  var selectedPointsX = [];
-  var selectedPointsY = [];
+  var eqwInputKCaII = $('#eqw-KCaII');
+  var eqwInputGBand = $('#eqw-GBand');
+  var eqwInputMgI = $('#eqw-MgI');
+  var eqwInputSum = $('#eqw-sum');
+
+  var equationInputGyr = $('#equation-Gyr');
+  var equationInputFeH = $('#equation-FeH');
+  
+  var wavelengthStartKCaII = 3908;
+  var wavelengthEndKCaII = 3952;
+  var wavelengthStartGBand = 4284;
+  var wavelengthEndGBand = 4318;
+  var wavelengthStartMgI = 5156;
+  var wavelengthEndMgI = 5196;
+
+  var pointsXKCaII = [];
+  var pointsYKCaII = [];
+  var pointsXGBand = [];
+  var pointsYGBand = [];
+  var pointsXMgI = [];
+  var pointsYMgI = [];
+
+  var eqwKCaII;
+  var eqwGBand;
+  var eqwMgI;
+  var eqwSum;
+
+  var equationGyr;
+  var equationFeH;
+  
   var wavelength, flux;
 
   function abortRead() {
@@ -24,7 +52,7 @@ $(document).ready(function() {
       alert('File is not readable');
       break;
     case evt.target.error.ABORT_ERR:
-      break; // noop
+      break;
     default:
       alert('An error occurred reading this file.');
     };
@@ -49,9 +77,21 @@ $(document).ready(function() {
   }
 
   function clear() {
-    tableBody.empty();
-    selectedPointsX = [];
-    selectedPointsY = [];
+    tableBodyKCaII.empty();
+    tableBodyGBand.empty();
+    tableBodyMgI.empty();
+    eqwInputKCaII.val('');
+    eqwInputGBand.val('');
+    eqwInputMgI.val('');
+    eqwInputSum.val('');
+    equationInputGyr.val('');
+    equationInputFeH.val('');
+    pointsXKCaII = [];
+    pointsYKCaII = [];
+    pointsXGBand = [];
+    pointsYGBand = [];
+    pointsXMgI = [];
+    pointsYMgI = [];
   }
 
   function wavelengthRange(wavelength, flux, start, end) {
@@ -73,9 +113,7 @@ $(document).ready(function() {
     return result;
   }
 
-  function calculateEQW() {
-    var wavelengthStart = parseFloat(wavelengthStartInput.val());
-    var wavelengthEnd = parseFloat(wavelengthEndInput.val());
+  function calculateEQWBand(wavelength, flux, wavelengthStart, wavelengthEnd, selectedPointsX, selectedPointsY) {
     var result = wavelengthRange(
       wavelength, flux, wavelengthStart, wavelengthEnd);
     var wl_range = result[0];
@@ -89,10 +127,60 @@ $(document).ready(function() {
     var D = diff(wl_range);
     var S = numeric.mul(X.slice(0, -1), D);
     var EQW = numeric.sum(S.map(Math.abs));
-    eqwInput.val(EQW);
+    return EQW;
+  }
+
+  function calculateEQW() {
+    eqwKCaII = calculateEQWBand(wavelength, flux,
+      wavelengthStartKCaII, wavelengthEndKCaII, pointsXKCaII, pointsYKCaII);
+
+    console.log(eqwKCaII);
+
+    eqwGBand = calculateEQWBand(wavelength, flux,
+      wavelengthStartGBand, wavelengthEndGBand, pointsXGBand, pointsYGBand);
+
+    console.log(eqwGBand);
+
+    eqwMgI = calculateEQWBand(wavelength, flux,
+      wavelengthStartMgI, wavelengthEndMgI, pointsXMgI, pointsYMgI);
+
+    console.log(eqwMgI);
+
+    eqwSum = eqwKCaII + eqwGBand + eqwMgI;
+  }
+
+  function outputEQW() {
+    eqwInputKCaII.val(eqwKCaII);
+    eqwInputGBand.val(eqwGBand);
+    eqwInputMgI.val(eqwMgI);
+    eqwInputSum.val(eqwSum);
   }
 
   function tableAppendPoint(x, y) {
+    var selectedPointsX;
+    var selectedPointsY;
+    var tableBody;
+
+    if (x >= wavelengthStartKCaII && x <= wavelengthEndKCaII) {
+      selectedPointsX = pointsXKCaII;
+      selectedPointsY = pointsYKCaII;
+      tableBody = tableBodyKCaII;
+    }
+    else if (x >= wavelengthStartGBand && x <= wavelengthEndGBand) {
+      selectedPointsX = pointsXGBand;
+      selectedPointsY = pointsYGBand;
+      tableBody = tableBodyGBand;
+    }
+    else if (x >= wavelengthStartMgI && x <= wavelengthEndMgI) {
+      selectedPointsX = pointsXMgI;
+      selectedPointsY = pointsYMgI;
+      tableBody = tableBodyMgI;
+    }
+    else {
+      alert("Please select points within the range of the bands");
+      return;
+    }
+
     selectedPointsX.push(x);
     selectedPointsY.push(y);
     var tr = $('<tr>');
@@ -102,11 +190,13 @@ $(document).ready(function() {
   }
 
   function splinePoints(xs, ys) {
+    var factor = 2;
     var sp = numeric.spline(xs, ys);
     var xs_start = xs[0];
     var xs_end = xs[xs.length - 1];
     var xs_diff = xs_end - xs_start;
-    var sp_xs = numeric.linspace(xs_start, xs_end, xs_diff*5 + 1, 'periodic');
+    var sp_xs = numeric.linspace(xs_start, xs_end, xs_diff*factor + 1,
+                                 'periodic');
     var sp_ys = sp.at(sp_xs);
     return [sp_xs, sp_ys];
   }
@@ -177,6 +267,26 @@ $(document).ready(function() {
     reader.readAsText(file);
   }
 
+  function calculateEquation(a, b, c, eqwm) {
+    return a + b*eqwm + c*eqwm*eqwm;
+  }
+
+  function calculateEquations() {
+    equationGyr = calculateEquation(-2.18, 0.188, -0.003, eqwSum);
+    equationFeH = calculateEquation(-2.9, 0.14, -0.0023, eqwSum);
+  }
+
+  function outputEquations() {
+    equationInputGyr.val(equationGyr);
+    equationInputFeH.val(equationFeH);
+  }
+
+  function calculateAll() {
+    calculateEQW();
+    outputEQW();
+    calculateEquations();
+    outputEquations();
+  }
 
   $('#files').change(function(event) {
     handleFileSelect(event);
@@ -185,6 +295,6 @@ $(document).ready(function() {
     clear();
   });
   $('#calculateEQWButton').click(function(event) {
-    calculateEQW();
+    calculateAll();
   });
 });
